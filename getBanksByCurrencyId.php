@@ -14,10 +14,9 @@ if (isset($data['id'])) {
 $pair = mysqli_query($connect, 'SELECT * FROM `currency`');
 $pair = mysqli_fetch_all($pair);
 
-$matchedRecords = array();
 foreach ($pair as $pairs) {
     if ($id == $pairs[0]) {
-        $matchedRecords[] = $pairs[3];
+        $matchedRecords = $pairs[3];
     }
 }
 
@@ -26,21 +25,17 @@ $Bank = mysqli_fetch_all($Bank);
 $data_to_send = array();
 
 foreach ($Bank as $Banks) {
-    if ($Banks[0] == $id) {
-        foreach ($matchedRecords as $matchedRecord) {
-            if ($Banks[0] == $matchedRecord[0]) {
-                $data_to_send = array(
-                    'id' => $Banks[0],
-                    'name' => $Banks[1],
-                    'bank_requisites' =>$Banks[4],
-                    'requisites_type' => $Banks[5]
-                );
+    if ($Banks[0] == $matchedRecords) {
+        $data_to_send[] = array(
+            'id' => $Banks[0],
+            'name' => $Banks[1],
+            'bank_requisites' => $Banks[4],
+            'requisites_type' => $Banks[5]
+        );
 
-            }
-        }
     }
-}
 
+}
 echo json_encode($data_to_send);
 
 

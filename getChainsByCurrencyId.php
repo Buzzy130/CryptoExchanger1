@@ -14,10 +14,9 @@ if (isset($data['id'])) {
     $pair = mysqli_query($connect, 'SELECT * FROM `currency`');
     $pair = mysqli_fetch_all($pair);
 
-    $matchedRecords = array();
     foreach ($pair as $pairs) {
         if ($id == $pairs[0]) {
-            $matchedRecords[] = $pairs[3];
+            $matchedRecords = $pairs[3];
         }
     }
 
@@ -26,19 +25,16 @@ if (isset($data['id'])) {
     $data_to_send = array();
 
     foreach ($network as $networks) {
-        if ($networks[0] == $id) {
-            foreach ($matchedRecords as $matchedRecord) {
-                if ($networks[0] == $matchedRecord[0]) {
-                    $data_to_send = array(
-                        'id' => $networks[0],
-                        'name' => $networks[1],
-                        'bank_requisites' => $networks[4],
-                        'requisites_type' => $networks[5]
-                    );
+        if ($networks[0] == $matchedRecords) {
+            $data_to_send[] = array(
+                'id' => $networks[0],
+                'name' => $networks[1],
+                'bank_requisites' => $networks[4],
+                'requisites_type' => $networks[5]
+            );
 
-                }
-            }
         }
+
     }
 
     echo json_encode($data_to_send);
